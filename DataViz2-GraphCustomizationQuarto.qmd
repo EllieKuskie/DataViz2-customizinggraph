@@ -1,0 +1,419 @@
+---
+title: "DataViz2 Customizing Graph"
+author: "Ellie Kuskie"
+format: pdf
+editor: visual
+---
+
+# 1) Penguins!
+
+## Setup
+
+```{r}
+install.packages("palmerpenguins")
+library(ggplot2)
+library(here)
+library(palmerpenguins)
+```
+
+```{r}
+# Read in the palmer penguins data
+penguins <- penguins
+```
+
+```{r}
+# Putting a "?" in front of a function (or built-in dataset) will automatically bring up its help page!
+?penguins
+```
+
+```{r}
+# creating initial plot, no color
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point()
+```
+
+## Q1.1)
+
+It does not look like there is a relationship between the variables, at most it looks 2 clumps. But if the 2 clumps are the same species then there is no relationship.
+
+## Q1.2)
+
+```{r}
+# added in color coding for each species
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species))
+```
+
+There now appears to be much more of a pattern between bill length and bill depth. For each species there is an increasing trend.
+
+## Q1.3)
+
+```{r}
+# changing the color pallete to brewer palette Dark2 
+# (outside of geom_point)
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  scale_color_brewer(palette = "Dark2")
+```
+
+```{r}
+# added a shape based on species (within geom_point())
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species,
+                 shape = species)) +
+  scale_color_brewer(palette = "Dark2")
+```
+
+```{r}
+# changed shapes away from default (outside of geom_point())
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species,
+                 shape = species)) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(8, 11, 14))
+```
+
+```{r}
+# Changed shape codes
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species,
+                 shape = species)) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24))
+```
+
+```{r}
+# Changed "color = species" to "fill = species" to make shapes solid
+# with black outline
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24))
+```
+
+```{r}
+# Changed size of points not based on any values
+# inside of geom_point() but outside of aes()
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24))
+```
+
+```{r}
+# Added geom_smooth() to make line
+# independent of color so its for whole group
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm") +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24))
+```
+
+```{r}
+# added aes(color = species) to geom_smooth() to make multiple lines
+# they are the wrong color though
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24))
+```
+
+```{r}
+# added scale_color_brewer so the new lines would be the right color
+# scale_fill_brewer only worked for the points
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24))
+```
+
+```{r}
+# changed the y-axis scale (scrunched the graph)
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  scale_y_continuous(limits = c(0, 30))
+```
+
+## Q1.4)
+
+```{r}
+?scale_y_continuous()
+```
+
+```{r}
+# Changed the y limits to 0 min and r default for max
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  scale_y_continuous(limits = c(0, NA))
+```
+
+```{r}
+# Change y-axis to be log scaled
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  scale_y_log10()
+```
+
+```{r}
+# Changed the axis titles
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)")
+```
+
+## Q1.5)
+
+```{r}
+#changed the legend title to be capitalized properly using labs()
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)",
+       fill = "Species",
+       shape = "Species",
+       color = "Species")
+```
+
+```{r}
+?theme()
+```
+
+```{r}
+# Used the theme() function to change x-axis font color and size
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)", 
+       fill = "Species",
+       color = "Species",
+       shape = "Species") +
+  theme(axis.title.x = element_text(color = "red",
+                                    size = 16))
+```
+
+## Q1.6)
+
+```{r}
+?element_text()
+```
+
+the options for the face of the text are: "plain", "italic", "bold", and "bold.italic"
+
+```{r}
+# added theme_classic() at the bottom
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)", 
+       fill = "Species",
+       color = "Species",
+       shape = "Species") +
+  theme(axis.title.x = element_text(color = "red",
+                                    size = 16)) +
+  theme_classic()
+```
+
+```{r}
+# Changed the location of theme_classic() to happen before theme()
+# Allowed the larger red text of the x-axis to stay (order matters)
+
+# Also changed around the themes to try other options
+# I enjoy classic the most though (bw is good too)
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)", 
+       fill = "Species",
+       color = "Species",
+       shape = "Species") +
+  theme_classic() +
+  theme(axis.title.x = element_text(color = "red",
+                                    size = 16))
+```
+
+```{r}
+# Graph bill length vs depth
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  # Add points separated by species
+  geom_point(aes(fill = species,
+                 shape = species),
+             # Change the size of the points
+             size = 2.5) +
+  # Add a lm line for each species
+  geom_smooth(aes(color = species),
+              method = "lm") +
+  # Customize the fill and color of the geoms
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  # Manually select the shape of the points
+  scale_shape_manual(values = c(21, 22, 24)) +
+  # Make nicer axis and legend titles based on the aes() specified above
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)", 
+       fill = "Species",
+       color = "Species",
+       shape = "Species") +
+  # Add in a plot title
+  ggtitle("Bill depth vs length of three penguin species") +
+  # Change the theme to theme_minimal
+  theme_minimal() +
+  theme(
+    # Change the size of axis titles and text (both x and y at once!)
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    # Change the size of legend title and text
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 12),
+    # Place the legend inside the plot, instead of the default outside
+    legend.position = "inside",
+    # Specify exactly where in x/y space (from 0 to 1) the legend should sit
+    legend.position.inside = c(0.9, 0.15),
+    # Color (not fill!) the legend - color refers to the outline here
+    legend.background = element_rect(color = "black")
+  )
+```
+
+```{r}
+# Graph bill length vs depth
+ggplot(data = penguins, aes(x = species, y = body_mass_g)) +
+  # Put violin plots, which show the distribution of points like a histogram/density plot, underneath each set of points
+  geom_violin(aes(fill = species),
+              # make the violin plots quite transparent
+              alpha = 0.25
+              ) +
+  # Add points separated by species
+  geom_jitter(aes(fill = species,
+                 shape = species),
+             # Change the size of the points
+             size = 2.5,
+             # Change the default amount that the points are "jittered" in the x (width) and y (height direction)
+             width = .1,
+             height = 0,
+             # Make the points slightly transparent
+             alpha = 0.75
+             ) +
+  # Customize the fill and color of the geoms
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  # Manually select the shape of the points
+  scale_shape_manual(values = c(21, 22, 24)) +
+  # Make nicer axis and legend titles based on the aes() specified above
+  labs(x = "Species",
+       y = "Body mass (g)", 
+       fill = "Species",
+       color = "Species",
+       shape = "Species") +
+  # Change the theme to theme_minimal
+  theme_minimal() +
+  theme(
+    # Change the size of axis titles and text (both x and y at once!)
+    axis.title = element_text(size = 14),
+    # Add a little bit of space on the top (t) and the right (r) of the x and y axis titles respectively
+    # This separates them from the axis text a bit
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    axis.text = element_text(size = 12),
+    # Change the size of legend title and text
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 12)
+  )
+```
+
+# Q2)
+
+```{r}
+abalone_landings <- read.csv("abalone_landings.csv")
+ggplot(abalone_landings, aes(fill = Abalone_Species , x = Year, y = Abalone_Landings_lbs)) +
+  geom_bar(position = "stack", stat = "identity")
+```
