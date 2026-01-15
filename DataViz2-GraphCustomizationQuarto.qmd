@@ -410,10 +410,63 @@ ggplot(data = penguins, aes(x = species, y = body_mass_g)) +
   )
 ```
 
-# Q2)
+## Q2.1)
+
+The audience for our new graph are policymakers. They are in charge of policy relating to the fishing and harvesting of marine organisms.
+
+## Q2.2
 
 ```{r}
+# stacked bar graph from previous activity
+
 abalone_landings <- read.csv("abalone_landings.csv")
 ggplot(abalone_landings, aes(fill = Abalone_Species , x = Year, y = Abalone_Landings_lbs)) +
   geom_bar(position = "stack", stat = "identity")
+
+# faceted plot from previous activity
+ggplot(abalone_landings, aes(x = Year, y = Abalone_Landings_lbs))+
+  geom_point(aes(color =  Abalone_Species)) +
+  facet_wrap(Abalone_Species ~ ., scales = "free_y")
+
+
 ```
+
+## Q2.3
+
+We want to adjust the colors of our first graph in order to better differentiate between the different abalone species. For the second graphs we want to add trendlines in order to better show the general trend for each species. For both we want to change the theme to make the graph less confusing and we want to change the axis and legend titles.
+
+## Q2.4
+
+```{r}
+# Updated stacked bar chart wich colors changed, title added, 
+# axes titles changed, legend title changed, and theme changed
+
+ggplot(abalone_landings, aes(fill = Abalone_Species , x = Year, y = Abalone_Landings_lbs)) +
+  geom_bar(position = "stack", stat = "identity") +
+  scale_fill_brewer(palette = "Dark2") +
+  labs(x = "Year",
+       y = "Abalone Caught (lbs)", 
+       fill = "Species",
+       color = "Species") +
+  ggtitle("Amount of Abalone Caught Between 1973 and 1997") + 
+  theme_classic()
+
+# Updated faced graphs with colors changed, smooth trendline,
+# added, axes title changed, legend title changed, and theme added
+
+ggplot(abalone_landings, aes(x = Year, y = Abalone_Landings_lbs))+
+  geom_point(aes(color =  Abalone_Species)) +
+  facet_wrap(Abalone_Species ~ ., scales = "free_y") +
+  geom_smooth(aes(color = Abalone_Species)) +
+  scale_color_brewer(palette = "Dark2") +
+   labs(x = "Year",
+       y = "Abalone Caught (lbs)",
+       color = "Species") +
+  ggtitle("Amount of Abalone Caught By Species") + 
+  theme_bw()
+
+```
+
+## Q2.5)
+
+We hope that our audience will see that abalone as a whole have decreased at a rapid rate and that different species have been effected more strongly than others. We hope that this will lead to policy being put in place to protect abalone and allow their populations to recover.
