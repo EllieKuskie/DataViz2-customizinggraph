@@ -10,7 +10,6 @@ editor: visual
 ## Setup
 
 ```{r}
-install.packages("palmerpenguins")
 library(ggplot2)
 library(here)
 library(palmerpenguins)
